@@ -14,6 +14,8 @@ Loop a whole YouTube video, or just the part between A and B. Use it from the to
 
 **Under the video**, next to Subscribe:
 
+![Loop controls next to the Subscribe button, looping 4:36 to 5:05](screenshots/under-video.png)
+
 - Click the **loop** button to repeat the whole video. **A | B** slides out to its left.
 - Click **A** at the start of the part and **B** at its end: only that part repeats.
 - Click the loop button again to stop everything.
