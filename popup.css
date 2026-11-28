@@ -13,6 +13,8 @@
    Two attributes beat the plain [data-theme] rule above, so the order of the two blocks doesn't matter. */
 :root[data-brand="youtube"] { --accent: #ff0000; --on-accent: #ffffff; }
 [data-theme="dark"][data-brand="youtube"] { --accent: #ff4e45; --on-accent: #ffffff; }
+:root[data-brand="tabs"] { --accent: #0f766e; --on-accent: #ffffff; }
+[data-theme="dark"][data-brand="tabs"] { --accent: #2dd4bf; --on-accent: #18181b; }
 * { box-sizing: border-box; }
 /* Content is 11px; only the header (h1) is 13px. Top padding is smaller because the header's icon button adds ~6px above the
    title, so the title and the last row sit about the same distance from the top and bottom edges. Settings rows sit 4px apart.
@@ -48,6 +50,21 @@ input:checked + .track { background: var(--accent); }
 input:checked + .track::after, input:checked + .track::before { transform: translateX(14px); }
 input:checked + .track::before { opacity: 1; }
 input:focus-visible + .track, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* Text field and buttons (TrustyTabs). Classes, so they never touch the switch checkbox above or another popup's own controls. */
+.field { width: 100%; padding: 9px 11px; font: inherit; font-size: 12px; color: var(--fg); background: var(--soft);
+  border: 1px solid transparent; border-radius: 8px; outline: none; transition: border-color .15s, box-shadow .15s; }
+/* Dimmer than real text and than the muted captions around it: a hint, not content (opacity, so it follows both themes). */
+/* Light needs more opacity than dark: grey on the pale field fades out much faster than light text on the dark one. */
+.field::placeholder { color: var(--muted); opacity: .55; }
+[data-theme="dark"] .field::placeholder { opacity: .35; }
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.btn { padding: 8px 12px; font: inherit; font-weight: 500; color: var(--fg); cursor: pointer; background: transparent;
+  border: 1px solid var(--line); border-radius: 8px; transition: background .15s, opacity .15s; }
+.btn:hover { background: var(--soft); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover { background: var(--accent); opacity: .9; }
+.field:disabled, .btn:disabled { opacity: .5; cursor: default; }
 
 /* Status line: plain muted text, red only for errors (class "err"). */
 #note { margin: 0; font-size: 11px; color: var(--muted); }
