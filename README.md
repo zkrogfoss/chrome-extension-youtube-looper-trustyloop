@@ -2,7 +2,7 @@
 
 Loop a whole YouTube video, or just the part between A and B. Use it from the toolbar or from the controls right under the video.
 
-![TrustyLoop popup in light and dark theme](screenshots/popup.png)
+![TrustyLoop popup in light and dark theme](screenshots/readme-popup.png)
 
 ## Install (Chrome or Brave)
 
@@ -14,28 +14,30 @@ Loop a whole YouTube video, or just the part between A and B. Use it from the to
 
 **Under the video**, next to Subscribe:
 
-![Loop controls next to the Subscribe button, looping 4:36 to 5:05](screenshots/under-video.png)
+<img src="screenshots/readme-under-video.png" alt="The loop button next to Subscribe, then looping 4:36 to 5:05 with A and B set" width="440">
 
 - Click the **loop** button to repeat the whole video. **A | B** slides out to its left.
 - Click **A** at the start of the part and **B** at its end: only that part repeats.
 - Click the loop button again to stop everything.
 
-**In the popup** (toolbar icon): the same controls, plus a light/dark toggle. Both stay in sync.
+**In the popup** (toolbar icon): the same controls, a switch to show or hide the controls under the video (on by default), plus a light/dark toggle. Both stay in sync.
 
 A new video starts without a loop. The controls under the video follow YouTube's own light or dark theme. On music.youtube.com they float above the player bar.
 
 ## Privacy
 
-No network access, no analytics, nothing stored. It runs only on youtube.com and music.youtube.com.
+No network access, no analytics. The only thing saved is whether to show the controls under the video. It runs only on youtube.com and music.youtube.com.
 
 ## Files
 
 | File | Job |
 | --- | --- |
-| `manifest.json` | Runs only on YouTube; no extra permissions |
+| `manifest.json` | Runs only on YouTube; asks only for storage (the show/hide choice) |
 | `content.js` | The loop logic and the controls under the video |
 | `popup.html`, `popup.js` | The toolbar popup |
+| `popup.css` | Popup styles, shared with the other Trusty extensions |
 | `theme.js` | Light/dark toggle for the popup |
+| `screenshots/` | Images for this page and the Chrome Web Store (not part of the extension) |
 
 ## License
 

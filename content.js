@@ -1,5 +1,6 @@
-// Compact loop controls next to the Subscribe button. Sends nothing anywhere, stores nothing.
+// Compact loop controls next to the Subscribe button. Sends nothing anywhere; the only thing stored is the show/hide choice.
 const state = { whole: false, a: null, b: null };
+let showButton = false; // off until the saved choice is read, so a hidden button never flashes on load
 const video = () => document.querySelector("video.html5-main-video") ?? document.querySelector("video");
 const time = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
@@ -146,9 +147,9 @@ document.addEventListener("timeupdate", (e) => {
 // youtube.com: after Subscribe. music.youtube.com has no such spot, so the pill floats above its player bar.
 let tries = 0;
 function mount() {
-  const watching = location.pathname === "/watch";
-  host.style.display = watching ? "" : "none";
-  if (!watching) return;
+  const visible = location.pathname === "/watch" && showButton;
+  host.style.display = visible ? "" : "none";
+  if (!visible) return;
   const owner = document.querySelector("ytd-watch-metadata #owner");
   if (owner) {
     host.classList.remove("floating");
@@ -172,5 +173,15 @@ document.addEventListener("yt-navigate-finish", () => {
   mount();
 });
 
+// The popup's "Show button under the video" switch. On unless turned off; changes apply without reloading the page.
+// Hiding only hides the bar: a running loop keeps going and the toolbar popup still controls it.
+const setShow = (value) => {
+  showButton = value !== false;
+  tries = 0;
+  mount();
+};
 render();
-mount();
+chrome.storage.local.get("showButton").then((s) => setShow(s.showButton), () => setShow(true));
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.showButton) setShow(changes.showButton.newValue);
+});

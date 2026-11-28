@@ -10,6 +10,7 @@ function show(state) {
     $("controls").hidden = true;
     return;
   }
+  $("note").textContent = ""; // #note collapses when empty
   $("controls").hidden = false;
   $("loop").setAttribute("aria-checked", String(state.whole));
   $("ab").classList.toggle("open", state.whole);
@@ -18,8 +19,8 @@ function show(state) {
   $("tb").textContent = state.b === null ? "–:––" : time(state.b);
   $("a").classList.toggle("set", state.a !== null);
   $("b").classList.toggle("set", state.b !== null);
-  $("hint").textContent =
-    state.a !== null && state.b !== null ? `Looping ${time(state.a)} → ${time(state.b)}` :
+  $("hint").textContent = !state.whole ? "Play this video on repeat" :
+    state.a !== null && state.b !== null ? "Looping a part" : // the A and B tiles right below already show the times
     state.a !== null ? "Now set the end." : "Whole video. Set A and B to loop a part.";
 }
 
@@ -33,3 +34,14 @@ async function send(cmd) {
 
 for (const id of ["loop", "a", "b"]) $(id).addEventListener("click", () => send(id));
 send("state");
+
+// "Show button under the video": saved here, the page picks it up from storage. On unless the user turned it off.
+const showSwitch = $("show");
+const { showButton } = await chrome.storage.local.get("showButton");
+// aria-checked is kept in step with checked: tests and the shared design read the switch state from it.
+const setShow = (on) => { showSwitch.checked = on; showSwitch.setAttribute("aria-checked", String(on)); };
+setShow(showButton !== false);
+showSwitch.addEventListener("change", () => {
+  setShow(showSwitch.checked);
+  chrome.storage.local.set({ showButton: showSwitch.checked });
+});

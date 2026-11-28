@@ -1,0 +1,57 @@
+/* Trusty extensions: shared popup styles. Identical file in every repo (copy it, don't edit one copy); see AGENTS.md "Design system".
+   Extension-specific rules stay in that popup.html's own <style>. */
+:root {
+  --bg: #ffffff; --fg: #18181b; --muted: #71717a; --line: #e4e4e7; --soft: #f4f4f5;
+  --accent: #4f46e5; --on-accent: #ffffff; --err: #c4493c; --off: #d4d4d8;
+}
+[data-theme="dark"] {
+  --bg: #18181b; --fg: #fafafa; --muted: #a1a1aa; --line: #3f3f46; --soft: #232327;
+  --accent: #818cf8; --on-accent: #18181b; --err: #ff8a7a; --off: #52525b;
+  color-scheme: dark;
+}
+/* Brand accent: a popup opts in with <html data-brand="youtube"> (the YouTube extensions: YouTube red). Without it, indigo.
+   Two attributes beat the plain [data-theme] rule above, so the order of the two blocks doesn't matter. */
+:root[data-brand="youtube"] { --accent: #ff0000; --on-accent: #ffffff; }
+[data-theme="dark"][data-brand="youtube"] { --accent: #ff4e45; --on-accent: #ffffff; }
+* { box-sizing: border-box; }
+/* Content is 11px; only the header (h1) is 13px. Top padding is smaller because the header's icon button adds ~6px above the
+   title, so the title and the last row sit about the same distance from the top and bottom edges. Settings rows sit 4px apart.
+   The main action sits 10px + the 4px gap = ~14px below the header line and above the first row, equal on both sides. */
+body { margin: 0; width: 260px; padding: 10px 16px 16px; display: grid; gap: 4px;
+  background: var(--bg); color: var(--fg); font: 11px/1.4 system-ui, -apple-system, sans-serif; }
+/* A hairline under the header, edge to edge (the negative margin cancels the body's side padding). */
+header { display: flex; align-items: center; justify-content: space-between; margin: 0 -16px; padding: 0 16px 4px;
+  border-bottom: 1px solid var(--line); }
+h1 { margin: 0; font-size: 13px; font-weight: 600; }
+.icon-btn { width: 30px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--muted);
+  display: grid; place-items: center; cursor: pointer; }
+.icon-btn:hover { background: var(--soft); color: var(--fg); }
+svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+[data-theme="dark"] .moon, [data-theme="light"] .sun { display: none; }
+
+/* Switch row: <label for="x">Text <span class="switch"><input id="x" type="checkbox"><span class="track"></span></span></label> */
+label { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; color: var(--fg); }
+.switch { position: relative; width: 31px; height: 17px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+/* pointer-events: none so a click on the switch reaches the checkbox under the track (tests click it directly). */
+.track { position: absolute; inset: 0; border-radius: 999px; background: var(--off); transition: background .15s; pointer-events: none; }
+/* White knob in both themes: a knob in the page colour looked dark and weak on the accent. The knob springs: a slight
+   overshoot (cubic-bezier y > 1) instead of a linear slide. */
+.track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: transform .28s cubic-bezier(.34, 1.56, .64, 1); }
+/* A small accent check on the knob when on: says "on" without relying on colour alone. Moves with the knob, above it. */
+.track::before { content: ""; position: absolute; z-index: 1; top: 5.5px; left: 5.5px; width: 6px; height: 6px;
+  background: var(--accent); opacity: 0; transition: transform .28s cubic-bezier(.34, 1.56, .64, 1), opacity .15s;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.5 2.5L10 3.5' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5l2.5 2.5L10 3.5' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+input:checked + .track { background: var(--accent); }
+input:checked + .track::after, input:checked + .track::before { transform: translateX(14px); }
+input:checked + .track::before { opacity: 1; }
+input:focus-visible + .track, button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+/* Status line: plain muted text, red only for errors (class "err"). */
+#note { margin: 0; font-size: 11px; color: var(--muted); }
+/* Collapses when there is no message, so it doesn't add empty space above the bottom padding. */
+#note:empty { display: none; }
+#note.err { color: var(--err); }
+@media (prefers-reduced-motion: reduce) { .track, .track::after, .track::before { transition: none; } }
